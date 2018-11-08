@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+#  I am a bash script. My home is at https://github.com/svein83/Shell-scripts
+#
+# Generate + output a line of gradually shifting RGB colors.
+# red->yellow->green->cyan->blue->magenta.
+# Should fill your current terminal width.
+# NOTE :
+# I only used INT for calculating, and division with INT is... Iffy...
+# This causes shorter lines than intended in some cases.
+#
+
+showrgb(){
+ doPrt(){
+  printf '\e[48;2;'"${r}"';'"${g}"';'"${b}"';38;2;'"${r}"';'"${g}"';'"${b}"'m%s' 'Æ'
+ }
+ go2Max(){
+    local -n cV="$1" ;local -i i=''
+    for ((i=0; i<=$cW; i++ )) ; do cV=$(( ${mX} * i )) ;doPrt ;done
+  }
+  go2Min(){
+    local -n cV="$1" ;local -i i=''
+    for ((i=0; i<=$cW; i++ )) ; do cV=$((${cM} - $(( ${mX} * i )))) ;doPrt ;done
+  }
+
+  local -i cM=255 ;local -i r=0 ;local -i g=0 ;local -i b=0
+  local -i vW=$(tput cols) ;local -i vH=$(tput lines)
+  local cW=$(((( ${vW} / 5 )) -1 )) ;local mX=$(( ${cM} / ${cW} ))
+
+  r=${cM} ;go2Max g ;g=${cM} ;go2Min r ;r=0
+  go2Max b ;b=255 ;go2Min g ;g=0 ;go2Max r
+
+  echo -e '\e[0m'
+}
+showrgb
