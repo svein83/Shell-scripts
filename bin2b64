@@ -1,0 +1,13 @@
+#!/bin/bash
+
+bin2b64(){
+#  Encode a file into a base-64 string, and prepend it with the (hopefully)-
+#  correct MIME. This way, you can use them in <img src="... in HTML docs. 
+#
+  strFileName="$*"
+  strFileMIME="$(file "${strFileName}" --mime-type --brief)"
+  strFileData="$(base64 "${strFileInput}" -w0)"
+  b64DataURI="data:"${strFileMIME}";base64,${strFileData}"
+  echo "${strOut}"
+}
+
